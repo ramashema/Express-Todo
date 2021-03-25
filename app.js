@@ -31,13 +31,13 @@ mongoose.connect("mongodb://localhost:27017/express_todo",
         poolSize: 10
     });
 
+/*capture any error if there is any connection error*/
 db.on("error", console.error.bind(console, "Mongodb connection error:"));
 
+/*let admin know that the connection is success*/
 db.once("open", function (){
     console.info("Successfully connected to the db");
-})
-
-
+});
 
 /*set the view engine and view directory*/
 app.set("views", path.resolve(__dirname, "views"));
