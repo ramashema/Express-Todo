@@ -18,6 +18,7 @@ const userSchema = new Schema({
 userSchema.pre("save", function (done){
     const user = this;
     const saltFactor = 10;
+    const doNothing = function (){};
     /*check if user is changing the password, if yes encrypt if not then the password is not created nor modified*/
     if( user.isModified("password") ){
         /*generate the password salt*/
@@ -26,10 +27,11 @@ userSchema.pre("save", function (done){
                 return done(error);
             }
 
-            bcrypt.hash(user.password, salt, function (error, hashedPassword){
+            bcrypt.hash(user.password, salt, doNothing, function (error, hashedPassword){
                 if(error) { return done(error); }
                 /*now the user password will be that hashed password*/
                 user.password = hashedPassword;
+                done();
             });
         });
     }

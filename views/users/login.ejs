@@ -1,0 +1,26 @@
+<h1>Login</h1>
+<div>
+    <!-- This div holds error and info messages -->
+    <% if(errors.length) { %>
+        <p><%= errors %></p>
+    <% } %>
+
+    <% if(infos.length) { %>
+        <p><%= infos %></p>
+    <% } %>
+</div>
+<form action="/users/login" method="POST">
+    <div>
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" placeholder="e.g ramashema@domain.com">
+    </div>
+
+    <div>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" placeholder="enter your password">
+    </div>
+
+    <div>
+        <input type="submit" value="Login" role="button">
+    </div>
+</form>

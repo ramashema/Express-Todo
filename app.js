@@ -7,9 +7,11 @@ const cookie = require("cookie-parser");
 const flash = require("express-flash");
 const ms = require("ms");
 const mongoose = require("mongoose");
+const passport = require("passport");
 
 
 const routes = require("./routes/routes");
+const passportConfigurations = require("./config/passportConfig");
 
 
 /*define the app*/
@@ -39,25 +41,29 @@ db.once("open", function (){
     console.info("Successfully connected to the db");
 });
 
+/*import passport configurations*/
+passportConfigurations();
+
 /*set the view engine and view directory*/
 app.set("views", path.resolve(__dirname, "views"));
 app.set("view engine", "ejs");
 
 /*use body parser middleware for parsing form content in post request*/
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+app.use(bodyParser.urlencoded({ extended: true }));
+
+/*use cookie parser*/
+app.use(cookie());
 
 /*use session*/
 app.use(session({
     secret: "superSecret",
-    cookie: ms("1m"),
     saveUninitialized: false,
     resave: false
 }));
 
-/*use cookie parser*/
-app.use(cookie());
+/*initialize passport middleware for login process authentication*/
+app.use(passport.initialize());
+app.use(passport.session());
 
 /*use flash for flash messages*/
 app.use(flash());
