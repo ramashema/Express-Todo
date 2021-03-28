@@ -1,7 +1,39 @@
 <h1>Home Page</h1>
-<h2>Your todo list</h2>
+<div>
+    <!-- this div will display alerts -->
+    <% if(errors.length) { %>
+        <p><%= errors %></p>
+    <% } %>
+
+    <% if(infos.length) { %>
+        <p><%= infos %></p>
+    <% } %>
+</div>
+
+
 <p>Welcome: <em><%= currentUser.getFullName() %></em></p>
 <a href="/users/logout">Logout</a>
-<ul>
-    <li>TODO 1</li>
-</ul>
+
+<div>
+    <!-- TODO: Display the list of tasks -->
+    <h2>Tasks</h2>
+        <% if(tasks.length) { %>
+            <ul>
+                <% tasks.forEach(function (task){ %>
+                    <li>
+                        <h4><%= task.title %></h4>
+                        <p><%= task.description %></p>
+                        <small style="color: #666666"><%= task.createAt %></small>
+                    </li>
+                <% }) %>
+            </ul>
+        <%} else { %>
+            <p>-- No task available, to create task please click "Add new task" link --</p>
+        <% } %>
+
+</div>
+
+
+
+
+<p><a href="/tasks/add">Add new task</a> </p>
