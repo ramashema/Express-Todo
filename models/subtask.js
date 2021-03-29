@@ -6,6 +6,7 @@ const subTaskSchema = new Schema({
     task : { type: mongoose.Schema.Types.ObjectId, ref: "Task" },
     title: { type: String, required: true },
     description: String,
+    status: { type: String, default: "on-progress" },
     createdAt: { type: Date, default: Date.now },
     dueAt: Date,
     extendedTo: Date

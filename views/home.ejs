@@ -24,6 +24,23 @@
                         <h4><%= task.title %></h4>
                         <p><%= task.description %></p>
                         <small style="color: #666666"><%= task.createAt %></small>
+
+                        <div>
+                            <!-- Subtasks -->
+                            <% if (subtasks.length){ %>
+                                <ul>
+                                    <% subtasks.forEach(function (subtask){ %>
+                                            <p><b><%= subtask.title %></b></p>
+                                            <em><%= subtask.description %></em><br>
+                                            <small>Due At:</small><small style="color: #666666"> <%= subtask.dueAt %></small>&nbsp;<small> Status: <%= subtask.status %></small>
+                                        </li>
+                                    <% }) %>
+                                </ul>
+                            <% } else { %>
+                                <p>-- The is no subtasks yet --</p>
+                            <% } %>
+                            <p><a href="tasks/subtasks/add/<%= task._id %>">Add subtask</a> </p>
+                        </div>
                     </li>
                 <% }) %>
             </ul>

@@ -2,9 +2,12 @@ const express = require("express");
 const passport = require("passport");
 const User = require("../models/user");
 const Task = require("../models/task");
+const SubTask = require("../models/subtask");
+
 
 /*TODO: define router*/
 const router = express.Router();
+
 
 /*TODO: make important variables available across multiple views*/
 router.use(function (req, res, next){
@@ -95,8 +98,15 @@ router.get("/home",  ensureAuthenticated, function (req, res, next){
     const userID = req.user._id;
     Task.find({ owner: userID }).sort({ priority: "descending" }).exec(function (error, tasks){
         if(error){ return next(error); }
-        /*TODO: render the view with tasks*/
-        res.render("home", { tasks: tasks });
+
+        /*TODO: fetch subtasks*/
+        SubTask.find().sort({ createdAt: "ascending" }).populate("task").exec(function (error, subtasks){
+            if(error){ return next(error); }
+            /*res.send(subtasks);*/
+
+            /*TODO: render the view with tasks*/
+            res.render("home", { tasks: tasks, subtasks: subtasks });
+        });
     });
 });
 
@@ -140,6 +150,43 @@ router.post("/tasks/add", ensureAuthenticated, function (req, res){
         req.flash("info", "New task added successfully");
         res.redirect("/home");
     });
+});
+
+/*TODO: the path to add subtask form*/
+router.get("/tasks/subtasks/add/:taskID", ensureAuthenticated, function (req, res, next){
+    Task.findOne({ _id: req.params.taskID  }).exec(function (error, task){
+        res.render("tasks/subtasks/add", { task: task  });
+    });
+});
+
+
+/*TODO: the path to process the posting of the subtask in the database*/
+router.post("/tasks/subtasks/add/:taskID", ensureAuthenticated, function (req, res, next){
+    /*TODO: receive data from the form*/
+    const taskID = req.params.taskID;
+    const title = req.body.title;
+    const description = req.body.description;
+    const duedate = new Date(req.body.duedate);
+
+    /*TODO: check for empty title [TOBE refactored]*/
+    if(title === "" || description === ""){
+        req.flash("error", "Title or Descriptions fields can not be empty");
+        res.redirect("back");
+    }
+
+
+    /*save the subtask in the databases*/
+    const newSubTask = new SubTask({
+        task : taskID,
+        title: title,
+        description: description,
+        dueAt: duedate,
+    });
+
+    newSubTask.save().then(function (){
+        req.flash("info", "Subtask added successfully");
+        res.redirect("/home");
+    })
 });
 
 /*export the module to be used in other files*/

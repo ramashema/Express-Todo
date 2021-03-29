@@ -1,0 +1,33 @@
+<h1>Add subtasks</h1>
+<div>
+    <!-- This div holds error and info messages -->
+    <% if(errors.length) { %>
+        <p><%= errors %></p>
+    <% } %>
+
+    <% if(infos.length) { %>
+        <p><%= infos %></p>
+    <% } %>
+</div>
+<b>Task:</b> <%= task.title %><br>
+<form action="/tasks/subtasks/add/<%= task.id %>" method="post">
+    <!--<input type="hidden" name="task" value="<%= task.id %>">-->
+    <div>
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" placeholder="The title of subtask">
+    </div>
+
+    <div>
+        <label for="description">Description</label>
+        <textarea id="description" name="description"></textarea>
+    </div>
+
+    <div>
+        <label for="duedate">Due date</label>
+        <input type="date" name="duedate" id="duedate">
+    </div>
+
+    <div>
+        <input type="submit" value="Add subtask" role="button">
+    </div>
+</form>
