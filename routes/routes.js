@@ -190,6 +190,16 @@ router.post("/tasks/subtasks/add/:taskID", ensureAuthenticated, function (req, r
     })
 });
 
-/*export the module to be used in other files*/
+/*TODO: view individual tasks*/
+router.get("/tasks/view/:taskID", ensureAuthenticated, function (req, res, next){
+    Task.findById(req.params.taskID).exec(function (error, task){
+        SubTask.find({ task: req.params.taskID }).sort({ createdAt: "descending" }).exec( function (error, subtasks){
+            if(error){ return next(error) }
+            res.render("tasks/view", { task: task, subtasks: subtasks });
+        });
+    });
+});
+
+/*TODO: export the module to be used in other files*/
 module.exports = router;
 
