@@ -96,13 +96,14 @@ router.get("/users/logout", ensureAuthenticated, function (req, res){
 router.get("/home",  ensureAuthenticated, function (req, res, next){
     /*TODO: fetch the list of tasks belong to login user from the database */
     const userID = req.user._id;
+    const subTasks = [];
     Task.find({ owner: userID }).sort({ priority: "descending" }).exec(function (error, tasks){
         if(error){ return next(error); }
 
         /*TODO: fetch subtasks*/
         SubTask.find().sort({ createdAt: "ascending" }).populate("task").exec(function (error, subtasks){
             if(error){ return next(error); }
-            /*res.send(subtasks);*/
+            /*res.send(subtasks);*
 
             /*TODO: render the view with tasks*/
             res.render("home", { tasks: tasks, subtasks: subtasks });

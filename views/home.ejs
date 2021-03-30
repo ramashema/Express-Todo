@@ -30,15 +30,17 @@
                             <% if (subtasks.length){ %>
                                 <ul>
                                     <% subtasks.forEach(function (subtask){ %>
-                                            <p><b><%= subtask.title %></b></p>
-                                            <em><%= subtask.description %></em><br>
-                                            <small>Due At:</small><small style="color: #666666"> <%= subtask.dueAt %></small>&nbsp;<small> Status: <%= subtask.status %></small>
-                                        </li>
+
+                                        <% if(JSON.stringify(subtask.task._id) === JSON.stringify(task._id)){ %>
+                                            <li>
+                                                <p><b><%= subtask.title %></b></p>
+                                                <em><%= subtask.description %></em><br>
+                                                <small>Due At:</small><small style="color: #666666"> <%= subtask.dueAt %></small>&nbsp;<small> Status: <%= subtask.status %></small>
+                                            </li>
+                                        <% } %>
                                     <% }) %>
                                 </ul>
-                            <% } else { %>
-                                <p>-- The is no subtasks yet --</p>
-                            <% } %>
+                            <% }  %>
                             <p><a href="tasks/subtasks/add/<%= task._id %>">Add subtask</a> </p>
                         </div>
                     </li>
