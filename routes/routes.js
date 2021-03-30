@@ -216,24 +216,36 @@ router.get("/tasks/confirm_delete/:taskID", ensureAuthenticated, function (req, 
 });
 
 /*TODO: delete a task*/
-router.get("/tasks/delete/:taskID", function (req, res, next){
-    Task.deleteOne({ _id: req.params.taskID }, function (error){
-        if(error){
-            req.flash("error", "Failed to delete a task");
-            res.redirect("back");
-        }
+router.get("/tasks/delete/:taskID", ensureAuthenticated, function (req, res, next){
 
-        /*delete all subtasks */
-        SubTask.deleteMany({ task: req.params.taskID }, function (error){
-            if(error){
-                req.flash("error", "Failed to delete subtasks");
-                res.redirect("/home");
-            }
+    Task.findById(req.params.taskID).exec(function (error, task){
+        if(error){ return next(error); }
 
-            req.flash("info", "Succefully delete task and it associated subtasks");
+        /*TODO: restrict none  task owner to delete tasks*/
+        if(JSON.stringify(req.user.id) === JSON.stringify(task.owner)){
+            Task.deleteOne({ _id: req.params.taskID }, function (error){
+                if(error){
+                    req.flash("error", "Failed to delete a task");
+                    res.redirect("back");
+                }
+
+                /*delete all subtasks */
+                SubTask.deleteMany({ task: req.params.taskID }, function (error){
+                    if(error){
+                        req.flash("error", "Failed to delete subtasks");
+                        res.redirect("/home");
+                    }
+
+                    req.flash("info", "Succefully delete task and it associated subtasks");
+                    res.redirect("/home");
+                })
+            });
+        } else {
+            req.flash("info", "Unauthorized action");
             res.redirect("/home");
-        })
+        }
     })
+
 });
 
 
