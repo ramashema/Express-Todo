@@ -194,11 +194,48 @@ router.post("/tasks/subtasks/add/:taskID", ensureAuthenticated, function (req, r
 router.get("/tasks/view/:taskID", ensureAuthenticated, function (req, res, next){
     Task.findById(req.params.taskID).exec(function (error, task){
         SubTask.find({ task: req.params.taskID }).sort({ createdAt: "descending" }).exec( function (error, subtasks){
-            if(error){ return next(error) }
+            if(error){ return next(error); }
             res.render("tasks/view", { task: task, subtasks: subtasks });
         });
     });
 });
+
+/*TODO: delete confirmation of a task a task*/
+router.get("/tasks/confirm_delete/:taskID", ensureAuthenticated, function (req, res, next){
+    Task.findById(req.params.taskID).exec(function (error, task){
+
+        if(error) { return next(error); }
+
+        if(JSON.stringify(req.user.id) === JSON.stringify(task.owner)){
+            res.render("tasks/delete_confirmation", { taskID: task.id });
+        } else {
+            req.flash("error", "Unauthorized action");
+            res.redirect("back");
+        }
+    });
+});
+
+/*TODO: delete a task*/
+router.get("/tasks/delete/:taskID", function (req, res, next){
+    Task.deleteOne({ _id: req.params.taskID }, function (error){
+        if(error){
+            req.flash("error", "Failed to delete a task");
+            res.redirect("back");
+        }
+
+        /*delete all subtasks */
+        SubTask.deleteMany({ task: req.params.taskID }, function (error){
+            if(error){
+                req.flash("error", "Failed to delete subtasks");
+                res.redirect("/home");
+            }
+
+            req.flash("info", "Succefully delete task and it associated subtasks");
+            res.redirect("/home");
+        })
+    })
+});
+
 
 /*TODO: export the module to be used in other files*/
 module.exports = router;

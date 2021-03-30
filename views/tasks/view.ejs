@@ -1,6 +1,10 @@
 <h1>View Task</h1>
 <% if(JSON.stringify(currentUser._id) === JSON.stringify(task.owner)) { %>
-    <h3><%= task.title %></h3>
+    <h3>
+        <%= task.title %>&nbsp;
+        <a href="/tasks/Edit/<%= task._id %>">Edit</a>&nbsp;|
+        <a href="/tasks/confirm_delete/<%= task._id %>">Delete</a>
+    </h3>
     <div>
         <% if( subtasks.length ) { %>
             <ul>
