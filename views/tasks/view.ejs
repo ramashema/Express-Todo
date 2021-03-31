@@ -1,8 +1,9 @@
 <h1>View Task</h1>
+<p><a href="/home">Home</a></p>
 <% if(JSON.stringify(currentUser._id) === JSON.stringify(task.owner)) { %>
     <h3>
         <%= task.title %>&nbsp;
-        <a href="/tasks/Edit/<%= task._id %>">Edit</a>&nbsp;|
+        <a href="/tasks/edit/<%= task._id %>">Edit</a>&nbsp;|
         <a href="/tasks/confirm_delete/<%= task._id %>">Delete</a>
     </h3>
     <div>

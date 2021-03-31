@@ -16,45 +16,41 @@
 
 <div>
     <!-- TODO: Display the list of tasks -->
-    <h2>Tasks</h2>
-        <% if(tasks.length) { %>
-            <ul>
-                <% tasks.forEach(function (task){ %>
-                    <% if(JSON.stringify(task.owner) === JSON.stringify(currentUser._id)) { %>
-                        <li>
-                            <h4><a href="/tasks/view/<%= task._id %>" ><%= task.title %></a></h4>
-                            <p><%= task.description %></p>
-                            <small style="color: #666666"><%= task.createAt %></small>
+    <h1>Projects</h1>
+    <% if(tasks.length >= 1) { %>
+        <ul>
+            <% tasks.forEach(function (task){ %>
+                <% if(JSON.stringify(task.owner) === JSON.stringify(currentUser._id)) { %>
+                    <li>
+                        <h2><a href="/tasks/view/<%= task._id %>" ><%= task.title %></a></h2>
+                        <p><%= task.description %></p>
+                        <small style="color: #666666"><%= task.createAt %></small>
+                        <h3>Projects Tasks</h3>
+                        <div>
+                            <!-- Subtasks -->
+                            <% if (subtasks.length >= 1){ %>
+                                <ul>
+                                    <% subtasks.forEach(function (subtask){ %>
 
-                            <div>
-                                <!-- Subtasks -->
-                                <% if (subtasks.length){ %>
-                                    <ul>
-                                        <% subtasks.forEach(function (subtask){ %>
-
-                                            <% if(JSON.stringify(subtask.task._id) === JSON.stringify(task._id)){ %>
-                                                <li>
-                                                    <p><b><%= subtask.title %></b></p>
-                                                    <em><%= subtask.description %></em><br>
-                                                    <small>Due At:</small><small style="color: #666666"> <%= subtask.dueAt %></small>&nbsp;<small> Status: <%= subtask.status %></small>
-                                                </li>
-                                            <% } %>
-                                        <% }) %>
-                                    </ul>
-                                <% }  %>
-                                <p><a href="tasks/subtasks/add/<%= task._id %>">Add subtask</a> </p>
-                            </div>
-                        </li>
-                    <% } %>
-                <% }) %>
-            </ul>
-        <%} else { %>
-            <p>-- No task available, to create task please click "Add new task" link --</p>
-        <% } %>
+                                        <% if(JSON.stringify(subtask.task._id) === JSON.stringify(task._id)){ %>
+                                            <li>
+                                                <p><b><%= subtask.title %></b></p>
+                                                <em><%= subtask.description %></em><br>
+                                                <small>Deadline:</small><small style="color: #666666"> <%= subtask.dueAt %></small>&nbsp;<small> Status: <%= subtask.status %></small>
+                                            </li>
+                                        <% } %>
+                                    <% }) %>
+                                </ul>
+                            <% }  %>
+                            <p><a href="tasks/subtasks/add/<%= task._id %>">Add subtask</a> </p>
+                        </div>
+                    </li>
+                <% } %>
+            <% }) %>
+        </ul>
+    <%} else { %>
+        <p>-- No task available, to create task please click "Add new task" link --</p>
+    <% } %>
 
 </div>
-
-
-
-
 <p><a href="/tasks/add">Add new task</a> </p>

@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
+
+/*this is the tasks for the project*/
 /*define the schema for the model*/
 const subTaskSchema = new Schema({
     task : { type: mongoose.Schema.Types.ObjectId, ref: "Task" },

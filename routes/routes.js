@@ -8,7 +8,6 @@ const SubTask = require("../models/subtask");
 /*TODO: define router*/
 const router = express.Router();
 
-
 /*TODO: make important variables available across multiple views*/
 router.use(function (req, res, next){
     res.locals.currentUser = req.user;
@@ -248,6 +247,44 @@ router.get("/tasks/delete/:taskID", ensureAuthenticated, function (req, res, nex
 
 });
 
+/*TODO: launch edit task view*/
+router.get("/tasks/edit/:taskID", ensureAuthenticated, function (req, res, next){
+    Task.findById(req.params.taskID).exec(function (error, task){
+        if(error) { return next(error); }
+        res.render("tasks/edit", { task: task });
+    });
+});
+
+/*TODO: process task editing*/
+router.post("/tasks/edit/:taskID", ensureAuthenticated, function (req, res, next){
+    const title = req.body.title;
+    const description = req.body.description;
+    const priority = req.body.priority;
+
+    if (title.trim() === "" || description.trim() === "" || priority.trim() === ""){
+        req.flash("error", "All field are required");
+        res.redirect("back");
+    }
+
+    Task.findOne({ _id: req.params.taskID }, function(error, task){
+        if(error) { return next(error); }
+
+        // Using save() to update the document has advantage over other
+        task.title = title;
+        task.description = description;
+        task.priority = priority;
+
+        // save the task
+        task.save(function(error){
+            if(error){
+                return next(error);
+            }
+
+            req.flash("info", "Task updated successfully");
+            res.redirect("/tasks/view/"+req.params.taskID);
+        })
+    })
+});
 
 /*TODO: export the module to be used in other files*/
 module.exports = router;
