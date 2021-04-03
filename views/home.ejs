@@ -36,7 +36,15 @@
                                             <li>
                                                 <p><b><%= subtask.title %></b></p>
                                                 <em><%= subtask.description %></em><br>
-                                                <small>Deadline:</small><small style="color: #666666"> <%= subtask.dueAt %></small>&nbsp;<small> Status: <%= subtask.status %></small>
+                                                <small>Deadline:</small>
+                                                <small style="color: #666666">
+                                                    <% if(subtask.extendedTo) { %>
+                                                        <%= subtask.extendedTo %>
+                                                    <% }  else { %>
+                                                        <%= subtask.dueAt %>
+                                                    <% } %>
+                                                </small>&nbsp;
+                                                <small> Status: <%= subtask.status %></small>
                                             </li>
                                         <% } %>
                                     <% }) %>

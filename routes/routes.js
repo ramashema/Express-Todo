@@ -192,7 +192,7 @@ router.post("/tasks/subtasks/add/:taskID", ensureAuthenticated, function (req, r
 /*TODO: view individual tasks*/
 router.get("/tasks/view/:taskID", ensureAuthenticated, function (req, res, next){
     Task.findById(req.params.taskID).exec(function (error, task){
-        SubTask.find({ task: req.params.taskID }).sort({ createdAt: "descending" }).exec( function (error, subtasks){
+        SubTask.find({ task: req.params.taskID }).sort({ createdAt: "ascending" }).exec( function (error, subtasks){
             if(error){ return next(error); }
             res.render("tasks/view", { task: task, subtasks: subtasks });
         });
@@ -284,6 +284,62 @@ router.post("/tasks/edit/:taskID", ensureAuthenticated, function (req, res, next
             res.redirect("/tasks/view/"+req.params.taskID);
         })
     })
+});
+
+/*TODO: launch the form that will update the subtask*/
+router.get("/tasks/subtasks/edit/:subtaskID", ensureAuthenticated, function (req, res, next){
+    SubTask.findById(req.params.subtaskID).exec(function (error, subtask){
+        if(error){ return next(error);}
+
+        if(!subtask){
+            req.flash("error", "The requested project task does not exist");
+            res.redirect("back");
+        }
+
+        Task.findOne({ _id: subtask.task }).exec(function (error, task){
+            if(error){ return next(error); }
+            res.render("tasks/subtasks/edit", { subtask: subtask, task: task });
+        });
+    });
+});
+
+
+router.post("/tasks/subtasks/edit/:subtaskID", ensureAuthenticated, function (req, res, next){
+    const subtaskID = req.params.subtaskID;
+    const today = new Date();
+    const title = req.body.title;
+    const description = req.body.description;
+    const extendedTo = req.body.extendeddue;
+
+    /*search subtask*/
+    SubTask.findById(subtaskID).exec(function (error, subtask){
+        if(error){ return next(error); }
+
+        if(!subtask){
+            req.flash("error", "The requested subtask does not exit");
+            res.redirect("back");
+        }
+
+        /*TODO: compare dates to prevent user from entering past extended date*/
+        const extendedDue = Date.parse(extendedTo);
+        const subtaskDue = Date.parse(subtask.dueAt);
+
+        if( extendedDue > subtaskDue && extendedDue >= today.getTime() ){
+            subtask.title = title;
+            subtask.description = description;
+            subtask.extendedTo = extendedTo
+
+            subtask.save(function (error){
+                if(error){ return next(error); }
+
+                req.flash("info", "Subtask updated succesfully");
+                res.redirect("/home");
+            })
+        } else {
+            req.flash("error", "Extended date should be later or equal to today");
+            res.redirect("back");
+        }
+    });
 });
 
 /*TODO: export the module to be used in other files*/

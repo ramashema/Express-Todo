@@ -13,11 +13,21 @@
                     <li>
                         <h4>
                             <%= subtask.title %>&nbsp;
-                            <a href="#">Edit</a>&nbsp;|&nbsp;
+                            <a href="/tasks/subtasks/edit/<%= subtask._id %>">Edit</a>&nbsp;|&nbsp;
                             <a href="#">Delete</a>&nbsp;|&nbsp;
                             <a href="#">Completed</a>
                         </h4>
                         <p><%= subtask.description %></p>
+
+                        <small>Deadline:</small>
+                        <small style="color: #666666">
+                            <% if(subtask.extendedTo) { %>
+                                <%= subtask.extendedTo %>
+                            <% }  else { %>
+                                <%= subtask.dueAt %>
+                            <% } %>
+                        </small>&nbsp;
+                        <small> Status: <%= subtask.status %></small>
                     </li>
                 <% }) %>
             </ul>
