@@ -379,6 +379,43 @@ router.get("/tasks/subtasks/delete/:subtaskID", ensureAuthenticated, function (r
     });
 });
 
+
+/*TODO: mark subtask completion confirmation */
+router.get("/tasks/subtasks/confirm_completed/:subtaskID", function (req, res, next){
+    res.render("tasks/subtasks/confirm_completed", { subtaskID: req.params.subtaskID });
+});
+
 /*TODO: export the module to be used in other files*/
+router.get("/tasks/subtasks/complete/:subtaskID", function(req, res, next){
+    const subtaskID = req.params.subtaskID;
+    SubTask.findById(subtaskID).exec(function (error, subtask){
+        if(error){ return next(error); }
+
+        const taskID = subtask.task;
+        Task.findById(taskID).exec(function (error, task){
+            if(error){ return next(error); }
+
+            if(JSON.stringify(req.user._id) !== JSON.stringify(task.owner)){
+                req.flash("error", "Unauthorized action");
+                res.redirect("/home");
+            }
+
+            if(subtask.status === "completed"){
+                req.flash("error","The subtask is already in 'Completed State'");
+                res.redirect("/tasks/view/"+task._id);
+            }
+
+            subtask.status = "completed";
+            subtask.save(function (error){
+                if(error){ return next(error); }
+
+                req.flash("info", "Congratulation! you have successfully completed the task");
+                res.redirect("/tasks/view/"+task._id);
+            });
+        });
+    });
+});
+
+
 module.exports = router;
 
