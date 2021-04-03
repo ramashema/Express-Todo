@@ -1,5 +1,17 @@
 <h1>View Task</h1>
 <p><a href="/home">Home</a></p>
+
+<div>
+    <!-- this div will display alerts -->
+    <% if(errors.length) { %>
+        <p><%= errors %></p>
+    <% } %>
+
+    <% if(infos.length) { %>
+        <p><%= infos %></p>
+    <% } %>
+</div>
+
 <% if(JSON.stringify(currentUser._id) === JSON.stringify(task.owner)) { %>
     <h3>
         <%= task.title %>&nbsp;
@@ -14,7 +26,7 @@
                         <h4>
                             <%= subtask.title %>&nbsp;
                             <a href="/tasks/subtasks/edit/<%= subtask._id %>">Edit</a>&nbsp;|&nbsp;
-                            <a href="#">Delete</a>&nbsp;|&nbsp;
+                            <a href="/tasks/subtasks/confirm_delete/<%= subtask._id %>">Delete</a>&nbsp;|&nbsp;
                             <a href="#">Completed</a>
                         </h4>
                         <p><%= subtask.description %></p>

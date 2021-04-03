@@ -167,6 +167,7 @@ router.post("/tasks/subtasks/add/:taskID", ensureAuthenticated, function (req, r
     const title = req.body.title;
     const description = req.body.description;
     const duedate = new Date(req.body.duedate);
+    const today = new Date();
 
     /*TODO: check for empty title [TOBE refactored]*/
     if(title === "" || description === ""){
@@ -174,6 +175,11 @@ router.post("/tasks/subtasks/add/:taskID", ensureAuthenticated, function (req, r
         res.redirect("back");
     }
 
+    if(today.getTime() > duedate.getTime()){
+        /*user choose past due date*/
+        req.flash("error", "Due date can not be the date in the past");
+        res.redirect("back");
+    }
 
     /*save the subtask in the databases*/
     const newSubTask = new SubTask({
@@ -339,6 +345,37 @@ router.post("/tasks/subtasks/edit/:subtaskID", ensureAuthenticated, function (re
             req.flash("error", "Extended date should be later or equal to today");
             res.redirect("back");
         }
+    });
+});
+
+/*delete subtask confirmation*/
+router.get("/tasks/subtasks/confirm_delete/:subtaskID", function (req, res, next){
+    res.render("tasks/subtasks/confirm_delete", { subtaskID: req.params.subtaskID });
+});
+
+
+/*TODO: delete subtask*/
+router.get("/tasks/subtasks/delete/:subtaskID", ensureAuthenticated, function (req, res, next){
+    const subtaskID = req.params.subtaskID;
+    SubTask.findById(subtaskID).exec(function (error, subtask){
+        if(error){ return next(error); }
+
+        const taskID = subtask.task;
+        Task.findById(taskID).exec(function (error, task){
+            if(error){ return next(error); }
+
+            if(JSON.stringify(req.user._id) !== JSON.stringify(task.owner)){
+                req.flash("error", "Unauthorized action");
+                res.redirect("/home");
+            }
+
+            SubTask.deleteOne({ _id: subtaskID }).exec(function (error){
+                if(error){ return next(error); }
+
+                req.flash("info", "Successfully deleted subtask");
+                res.redirect("/tasks/view/"+task._id);
+            });
+        });
     });
 });
 
