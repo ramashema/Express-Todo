@@ -200,7 +200,24 @@ router.get("/tasks/view/:taskID", ensureAuthenticated, function (req, res, next)
     Task.findById(req.params.taskID).exec(function (error, task){
         SubTask.find({ task: req.params.taskID }).sort({ createdAt: "ascending" }).exec( function (error, subtasks){
             if(error){ return next(error); }
-            res.render("tasks/view", { task: task, subtasks: subtasks });
+
+            /*Separate completed and uncompleted tasks*/
+            const completedSubTasks = [];
+            const onProgressSubTasks = [];
+
+            subtasks.forEach(function (subtask){
+                if(subtask.status !== "completed"){
+                    onProgressSubTasks.push(subtask);
+                }else {
+                    completedSubTasks.push(subtask);
+                }
+            });
+            res.render("tasks/view", {
+                task: task,
+                subtasks: subtasks,
+                onProgressSubTasks: onProgressSubTasks,
+                completedSubTasks: completedSubTasks
+            });
         });
     });
 });
@@ -386,7 +403,7 @@ router.get("/tasks/subtasks/confirm_completed/:subtaskID", function (req, res, n
 });
 
 /*TODO: export the module to be used in other files*/
-router.get("/tasks/subtasks/complete/:subtaskID", function(req, res, next){
+router.get("/tasks/subtasks/complete/:subtaskID", ensureAuthenticated, function(req, res, next){
     const subtaskID = req.params.subtaskID;
     SubTask.findById(subtaskID).exec(function (error, subtask){
         if(error){ return next(error); }

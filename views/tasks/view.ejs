@@ -18,38 +18,67 @@
         <a href="/tasks/edit/<%= task._id %>">Edit</a>&nbsp;|
         <a href="/tasks/confirm_delete/<%= task._id %>">Delete</a>
     </h3>
-    <div>
-        <% if( subtasks.length ) { %>
-            <ul>
-                <% subtasks.forEach(function(subtask){ %>
-                    <li>
-                        <h4>
-                            <%= subtask.title %>&nbsp;
-                            <a href="/tasks/subtasks/edit/<%= subtask._id %>">Edit</a>&nbsp;|&nbsp;
-                            <a href="/tasks/subtasks/confirm_delete/<%= subtask._id %>">Delete</a>&nbsp;
-                            <% if(!(subtask.status === "completed")){ %>
-                                |&nbsp;<a href="/tasks/subtasks/confirm_completed/<%= subtask._id %>">Completed</a>
-                            <% } %>
-                        </h4>
-                        <p><%= subtask.description %></p>
 
-                        <small>Deadline:</small>
-                        <small style="color: #666666">
-                            <% if(subtask.extendedTo) { %>
-                                <%= subtask.extendedTo %>
-                            <% }  else { %>
-                                <%= subtask.dueAt %>
-                            <% } %>
-                        </small>&nbsp;
-                        <small> Status: <%= subtask.status %></small>
-                    </li>
+    <% if( subtasks.length ) { %>
+
+            <!-- display on-progress tasks -->
+            <% if(onProgressSubTasks.length > 0) { %>
+                <h3>Tasks On-Progress</h3>
+                <% onProgressSubTasks.forEach(function (subtask){ %>
+                    <ul>
+                        <li>
+                            <h4>
+                                <%= subtask.title %>&nbsp;
+                                <a href="/tasks/subtasks/edit/<%= subtask._id %>">Edit</a>&nbsp;|&nbsp;
+                                <a href="/tasks/subtasks/confirm_delete/<%= subtask._id %>">Delete</a>&nbsp;
+                                |&nbsp;<a href="/tasks/subtasks/confirm_completed/<%= subtask._id %>">Completed</a>
+                            </h4>
+                            <p><%= subtask.description %></p>
+
+                            <small>Deadline:</small>
+                            <small style="color: #666666">
+                                <% if(subtask.extendedTo) { %>
+                                    <%= subtask.extendedTo %>
+                                <% }  else { %>
+                                    <%= subtask.dueAt %>
+                                <% } %>
+                            </small>&nbsp;
+                            <small> Status: <%= subtask.status %></small>
+                        </li>
+                    </ul>
                 <% }) %>
-            </ul>
-        <% } else { %>
+            <% } %>
+
+
+            <!-- display on-progress tasks -->
+            <% if(completedSubTasks.length > 0) { %>
+                <h3>Tasks Completed</h3>
+                <% completedSubTasks.forEach(function (subtask){ %>
+                    <ul>
+                        <li>
+                            <h4>
+                                <%= subtask.title %>&nbsp;
+                            </h4>
+                            <p><%= subtask.description %></p>
+
+                            <small>Deadline:</small>
+                            <small style="color: #666666">
+                                <% if(subtask.extendedTo) { %>
+                                    <%= subtask.extendedTo %>
+                                <% }  else { %>
+                                    <%= subtask.dueAt %>
+                                <% } %>
+                            </small>&nbsp;
+                            <small> Status: <%= subtask.status %></small>
+                        </li>
+                    </ul>
+                <% }) %>
+            <% } else { %>
+                <p>--Currently the project does not completed task--</p>
+            <% } %>
+    <% } else { %>
             <p>-- No subtask available --</p>
-        <% }%>
-    </div>
+    <% }%>
 <% } else { %>
     <p>You are not authorized to view this page</p>
 <% } %>
-
