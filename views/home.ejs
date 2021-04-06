@@ -24,40 +24,34 @@
                     <li>
                         <h2><a href="/tasks/view/<%= task._id %>" ><%= task.title %></a></h2>
                         <p><%= task.description %></p>
-                        <small style="color: #666666"><%= task.createAt %></small>
-                        <h3>Projects Tasks</h3>
                         <div>
-                            <!-- Subtasks -->
-                            <% if (subtasks.length >= 1){ %>
-                                <ul>
-                                    <% subtasks.forEach(function (subtask){ %>
+                            <small style="color: #666666"><%= task.createAt %></small>
+                        </div>
+                        <br>
+                        <div>
+                            <% let completedSubTaskCount = 0 %>
+                            <% let pendingSubTaskCount = 0 %>
 
-                                        <% if(JSON.stringify(subtask.task._id) === JSON.stringify(task._id)){ %>
-                                            <li>
-                                                <p><b><%= subtask.title %></b></p>
-                                                <em><%= subtask.description %></em><br>
-                                                <small>Deadline:</small>
-                                                <small style="color: #666666">
-                                                    <% if(subtask.extendedTo) { %>
-                                                        <%= subtask.extendedTo %>
-                                                    <% }  else { %>
-                                                        <%= subtask.dueAt %>
-                                                    <% } %>
-                                                </small>&nbsp;
-                                                <small> Status: <%= subtask.status %></small>
-                                            </li>
-                                        <% } %>
-                                    <% }) %>
-                                </ul>
-                            <% }  %>
-                            <p><a href="tasks/subtasks/add/<%= task._id %>">Add subtask</a> </p>
+                            <% subtasks.forEach(function (task){ %>
+                                <% if(task.status === "completed"){ %>
+                                    <% completedSubTaskCount++; %>
+                                <% } %>
+
+                                <% if(task.status === "on-progress"){ %>
+                                    <% pendingSubTaskCount++; %>
+                                <% } %>
+                            <% }) %>
+
+
+                            <span>Completed Tasks: <%= completedSubTaskCount %></span>&nbsp;|&nbsp;
+                            <span>Pending Tasks: <%= pendingSubTaskCount %></span>&nbsp;
                         </div>
                     </li>
                 <% } %>
             <% }) %>
         </ul>
     <%} else { %>
-        <p>-- No task available, to create task please click "Add new task" link --</p>
+        <p>-- No Project available, to create the project please click "Add new task" link --</p>
     <% } %>
 
 </div>

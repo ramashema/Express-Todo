@@ -18,7 +18,7 @@
         <a href="/tasks/edit/<%= task._id %>">Edit</a>&nbsp;|
         <a href="/tasks/confirm_delete/<%= task._id %>">Delete</a>
     </h3>
-
+    <p><a href="/tasks/subtasks/add/<%= task._id %>">Add task</a> </p>
     <% if( subtasks.length ) { %>
 
             <!-- display on-progress tasks -->
@@ -82,3 +82,4 @@
 <% } else { %>
     <p>You are not authorized to view this page</p>
 <% } %>
+

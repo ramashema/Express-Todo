@@ -102,11 +102,29 @@ router.get("/home",  ensureAuthenticated, function (req, res, next){
         /*TODO: fetch subtasks*/
         SubTask.find().sort({ createdAt: "ascending" }).populate("task").exec(function (error, subtasks){
             if(error){ return next(error); }
-            /*res.send(subtasks);*
+            /*res.send(subtasks);*/
 
+            /*count completed and pending tasks*/
+            SubTask.countDocuments()
             /*TODO: render the view with tasks*/
             res.render("home", { tasks: tasks, subtasks: subtasks });
         });
+
+
+        /*let completed;
+        let pending;
+
+        SubTask.countDocuments({ status: "completed" }, function (error, completedSubTasks){
+            if(error){ return next(error); }
+
+            /!*TODO: count pending tasks*!/
+            SubTask.countDocuments({ status: "on-progress" }, function (error, pendingSubTasks){
+                if(error){ return next(error); }
+
+                /!*TODO: render the view with tasks*!/
+                res.render("home", { tasks: tasks, completedSubTasks: completedSubTasks, pendingSubtasks: pendingSubTasks });
+            });
+        });*/
     });
 });
 
