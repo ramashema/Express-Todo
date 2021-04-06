@@ -28,24 +28,36 @@
                             <small style="color: #666666"><%= task.createAt %></small>
                         </div>
                         <br>
+
+                        <!-- subtasks activities -->
                         <div>
-                            <% let completedSubTaskCount = 0 %>
-                            <% let pendingSubTaskCount = 0 %>
+                            <% let completedSubTasks = 0, pendingSubTasks = 0 %>
 
-                            <% subtasks.forEach(function (task){ %>
-                                <% if(task.status === "completed"){ %>
-                                    <% completedSubTaskCount++; %>
-                                <% } %>
+                            <% subtasks.forEach(function (subtask){ %>
+                                <% if(JSON.stringify(subtask.task._id) === JSON.stringify(task._id)) { %>
+                                    <% if(subtask.status === "completed") { %>
+                                        <% completedSubTasks++ %>
+                                    <% } %>
 
-                                <% if(task.status === "on-progress"){ %>
-                                    <% pendingSubTaskCount++; %>
+                                    <% if(subtask.status === "on-progress") { %>
+                                        <% pendingSubTasks++ %>
+                                    <% } %>
                                 <% } %>
                             <% }) %>
 
+                            <p>
+                                Completed Tasks: <%= completedSubTasks %>
+                                &nbsp;&nbsp;|&nbsp;Pending Tasks: <%= pendingSubTasks %>
+                                <% let projectCompletion = (completedSubTasks/(completedSubTasks + pendingSubTasks)) * 100 %>
+                                &nbsp;&nbsp;
+                                <% if (!(isNaN(projectCompletion))){ %>
+                                    |&nbsp;Project Completed by: <%= projectCompletion.toFixed(2) %>%
+                                    <meter value="<%= projectCompletion %>" min="0" max="100"><%= projectCompletion %>%</meter>
+                                <% } %>
 
-                            <span>Completed Tasks: <%= completedSubTaskCount %></span>&nbsp;|&nbsp;
-                            <span>Pending Tasks: <%= pendingSubTaskCount %></span>&nbsp;
+                            </p>
                         </div>
+                        <!-- end of subtasks activities -->
                     </li>
                 <% } %>
             <% }) %>
