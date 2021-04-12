@@ -1,26 +1,52 @@
-<h1>Login</h1>
-<div>
-    <!-- This div holds error and info messages -->
-    <% if(errors.length) { %>
-        <p><%= errors %></p>
-    <% } %>
+<%- include('../_header') %>
 
-    <% if(infos.length) { %>
-        <p><%= infos %></p>
-    <% } %>
+<div class="container">
+    <div class="row">
+        <div class="col-4 offset-4">
+
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="display-4 text-center">Login</h1>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="text-center">
+                        <!-- This div holds error and info messages -->
+                        <% if(errors.length) { %>
+                            <p class="alert alert-danger"><%= errors %></p>
+                        <% } %>
+
+                        <% if(infos.length) { %>
+                            <p class="alert alert-success"><%= infos %></p>
+                        <% } %>
+                    </div>
+
+                    <form action="/users/login" method="POST">
+                        <div class="form-group px-5">
+                            <label for="email">Email</label>
+                            <input type="email" name="email" class="form-control" id="email" placeholder="e.g ramashema@domain.com">
+                        </div>
+
+                        <div class="form-group px-5 my-2">
+                            <label for="password">Password</label>
+                            <input type="password" name="password" class="form-control" id="password" placeholder="enter your password">
+                        </div>
+
+                        <div class="form-group px-5 my-3">
+                            <input type="submit" class="btn btn-success" value="Login" role="button">
+                        </div>
+                    </form>
+
+                </div>
+
+                <div class="card-footer text-center">
+                    <small class="text-muted">Zamo Technologies&copy;<% const today = new Date() %><%= today.getFullYear() %>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<form action="/users/login" method="POST">
-    <div>
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email" placeholder="e.g ramashema@domain.com">
-    </div>
 
-    <div>
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" placeholder="enter your password">
-    </div>
 
-    <div>
-        <input type="submit" value="Login" role="button">
-    </div>
-</form>
