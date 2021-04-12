@@ -1,0 +1,70 @@
+<%- include('_header') %>
+<div class="container">
+    <div>
+        <!-- this div will display alerts -->
+        <% if(errors.length) { %>
+            <p><%= errors %></p>
+        <% } %>
+
+        <% if(infos.length) { %>
+            <p><%= infos %></p>
+        <% } %>
+    </div>
+
+    <div>
+        <!-- TODO: Display the list of tasks -->
+        <h1 class="display-2 text-muted">Projects</h1>
+        <p><a href="/tasks/add" class="badge bg-primary text-white">Add new task</a> </p>
+        <% if(tasks.length >= 1) { %>
+            <ul>
+                <% tasks.forEach(function (task){ %>
+                    <% if(JSON.stringify(task.owner) === JSON.stringify(currentUser._id)) { %>
+                        <li>
+                            <h2><a href="/tasks/view/<%= task._id %>" ><%= task.title %></a></h2>
+                            <p><%= task.description %></p>
+                            <div>
+                                <small style="color: #666666"><%= task.createAt %></small>
+                            </div>
+                            <br>
+
+                            <!-- subtasks activities -->
+                            <div>
+                                <% let completedSubTasks = 0, pendingSubTasks = 0 %>
+
+                                <% subtasks.forEach(function (subtask){ %>
+                                    <% if(JSON.stringify(subtask.task._id) === JSON.stringify(task._id)) { %>
+                                        <% if(subtask.status === "completed") { %>
+                                            <% completedSubTasks++ %>
+                                        <% } %>
+
+                                        <% if(subtask.status === "on-progress") { %>
+                                            <% pendingSubTasks++ %>
+                                        <% } %>
+                                    <% } %>
+                                <% }) %>
+
+                                <p>
+                                    Completed Tasks: <%= completedSubTasks %>
+                                    &nbsp;&nbsp;|&nbsp;Pending Tasks: <%= pendingSubTasks %>
+                                    <% let projectCompletion = (completedSubTasks/(completedSubTasks + pendingSubTasks)) * 100 %>
+                                    &nbsp;&nbsp;
+                                    <% if (!(isNaN(projectCompletion))){ %>
+                                        |&nbsp;Project Completed by: <%= projectCompletion.toFixed(2) %>%
+                                        <meter value="<%= projectCompletion %>" min="0" max="100"><%= projectCompletion %>%</meter>
+                                    <% } %>
+
+                                </p>
+                            </div>
+                            <!-- end of subtasks activities -->
+                        </li>
+                    <% } %>
+                <% }) %>
+            </ul>
+        <%} else { %>
+            <p>-- No Project available, to create the project please click "Add new task" link --</p>
+        <% } %>
+
+    </div>
+
+
+</div>
