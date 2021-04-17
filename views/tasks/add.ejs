@@ -1,44 +1,52 @@
-<h1>Add new task</h1>
-<p><a href="/home">Home</a></p>
-<div>
-    <!--TODO: This part will display the errors and information -->
-    <% if(errors.length) { %>
-        <p> <%= errors %> </p>
-    <% }%>
+<%- include("../_header") %>
 
-    <% if(infos.length) { %>
-        <p> <%= infos %> </p>
-    <% }%>
+<div class="container">
+    <div class="row">
+        <div class="col-6 offset-3 bg-light p-5">
+            <h1 class="display-5 text-center">Add new task</h1>
+            <div>
+                <!--TODO: This part will display the errors and information -->
+                <% if(errors.length) { %>
+                    <p class="alert alert-danger text-center"> <%= errors %> </p>
+                <% }%>
+
+                <% if(infos.length) { %>
+                    <p class="alert alert-info text-center"> <%= infos %> </p>
+                <% }%>
+            </div>
+
+            <!--TODO: The form to add new task -->
+            <form action="/tasks/add" method="post">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input name="title" id="title" class="form-control" placeholder="e.g Developing advanced to to application">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea name="description" id="description" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="priority">Priority</label>
+                    <input type="range" class="form-range" value="5" min="1" max="10" name="priority" id="priority">
+                    <div>
+                        <small style="color: #666">Hint: The higher the number the lower the priority</small>
+                    </div>
+                    <div id="priorityValueOutput">
+
+                    </div>
+                </div>
+
+                <div>
+                    <input type="submit" value="Add Project" class="btn btn-success" role="button">
+                </div>
+
+            </form>
+
+        </div>
+    </div>
 </div>
-
-<!--TODO: The form to add new task -->
-<form action="/tasks/add" method="post">
-    <div>
-        <label for="title">Title</label>
-        <input name="title" id="title" placeholder="e.g Developing advanced to to application">
-    </div>
-    <br>
-    <div>
-        <label for="description">Description</label>
-        <textarea name="description" id="description" rows="3"></textarea>
-    </div>
-
-    <div>
-        <label for="priority">Priority</label>
-        <input type="range" value="5" min="1" max="10" name="priority" id="priority">
-        <div>
-            <small style="color: #666">Hint: The higher the number the lower the priority</small>
-        </div>
-        <div id="priorityValueOutput">
-
-        </div>
-    </div>
-
-    <div>
-        <input type="submit" value="Add Project" role="button">
-    </div>
-
-</form>
 
 <script>
     /*TODO: get the DOM elements*/
@@ -46,11 +54,34 @@
     const priorityValueOutput = document.getElementById("priorityValueOutput");
 
     /*TODO: display initial priority value*/
-    priorityValueOutput.innerHTML = `<p>Priority level:</p> <h4>${priority.value}</h4>`;
+    if(parseInt(priority.value) <= 3){
+        priorityValueOutput.innerHTML = `<p>Priority level:</p> <h4 class="text-danger display-6 my-3">High-Priority</h4>`;
+    }
+
+    if(parseInt(priority.value) >= 4 && parseInt(priority.value) <= 6){
+        priorityValueOutput.innerHTML = `<p>Priority level:</p> <h4 class="text-warning display-6 my-3">Medium-Priority</h4>`;
+    }
+    
+    if(parseInt(priority.value) >= 7){
+        priorityValueOutput.innerHTML = `<p>Priority level:</p> <h4 class="text-success display-6 my-3">Low-Priority</h4>`;
+    }
+    
 
     /*TODO: change the value of priority when changing the value*/
     priority.oninput = function (){
-        priorityValueOutput.innerHTML = `<p>Priority level:</p> <h4>${this.value}</h4>`;
+        if(parseInt(priority.value) <= 3){
+        priorityValueOutput.innerHTML = `<p>Priority level:</p> <h4 class="text-danger display-6 my-3">High-Priority</h4>`;
+        }
+
+        if(parseInt(priority.value) >= 4 && parseInt(priority.value) <= 6){
+            priorityValueOutput.innerHTML = `<p>Priority level:</p> <h4 class="text-warning display-6 my-3">Medium-Priority</h4>`;
+        }
+    
+        if(parseInt(priority.value) >= 7){
+            priorityValueOutput.innerHTML = `<p>Priority level:</p> <h4 class="text-success display-6 my-3">Low-Priority</h4>`;
+        }
     }
 </script>
 <!-- End of new task form -->
+
+<%- include("../_footer") %>

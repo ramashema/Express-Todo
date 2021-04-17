@@ -38,7 +38,7 @@ db.on("error", console.error.bind(console, "Mongodb connection error:"));
 
 /*let admin know that the connection is success*/
 db.once("open", function (){
-    console.info("Successfully connected to the db");
+    console.info("Successfully connected to the database");
 });
 
 /*import passport configurations*/

@@ -109,22 +109,6 @@ router.get("/home",  ensureAuthenticated, function (req, res, next){
             /*TODO: render the view with tasks*/
             res.render("home", { tasks: tasks, subtasks: subtasks });
         });
-
-
-        /*let completed;
-        let pending;
-
-        SubTask.countDocuments({ status: "completed" }, function (error, completedSubTasks){
-            if(error){ return next(error); }
-
-            /!*TODO: count pending tasks*!/
-            SubTask.countDocuments({ status: "on-progress" }, function (error, pendingSubTasks){
-                if(error){ return next(error); }
-
-                /!*TODO: render the view with tasks*!/
-                res.render("home", { tasks: tasks, completedSubTasks: completedSubTasks, pendingSubtasks: pendingSubTasks });
-            });
-        });*/
     });
 });
 
@@ -216,7 +200,7 @@ router.post("/tasks/subtasks/add/:taskID", ensureAuthenticated, function (req, r
 /*TODO: view individual tasks*/
 router.get("/tasks/view/:taskID", ensureAuthenticated, function (req, res, next){
     Task.findById(req.params.taskID).exec(function (error, task){
-        SubTask.find({ task: req.params.taskID }).sort({ createdAt: "ascending" }).exec( function (error, subtasks){
+        SubTask.find({ task: req.params.taskID }).exec( function (error, subtasks){
             if(error){ return next(error); }
 
             /*Separate completed and uncompleted tasks*/
