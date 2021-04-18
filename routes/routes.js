@@ -214,11 +214,21 @@ router.get("/tasks/view/:taskID", ensureAuthenticated, function (req, res, next)
                     completedSubTasks.push(subtask);
                 }
             });
+
+            /*TODO: calculate the percentange of the project completion */
+
+            let projectCompletion = (completedSubTasks.length/(completedSubTasks.length + onProgressSubTasks.length)) * 100;
+
+            if(isNaN(projectCompletion)){
+                projectCompletion = 0;
+            }
+
             res.render("tasks/view", {
                 task: task,
                 subtasks: subtasks,
                 onProgressSubTasks: onProgressSubTasks,
-                completedSubTasks: completedSubTasks
+                completedSubTasks: completedSubTasks,
+                projectCompletion: projectCompletion.toFixed(2)
             });
         });
     });
