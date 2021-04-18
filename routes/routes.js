@@ -193,7 +193,7 @@ router.post("/tasks/subtasks/add/:taskID", ensureAuthenticated, function (req, r
 
     newSubTask.save().then(function (){
         req.flash("info", "Subtask added successfully");
-        res.redirect("/home");
+        res.redirect("/tasks/view/"+taskID);
     })
 });
 
@@ -329,6 +329,7 @@ router.get("/tasks/subtasks/edit/:subtaskID", ensureAuthenticated, function (req
 });
 
 
+/*TODO: process edited subtask */
 router.post("/tasks/subtasks/edit/:subtaskID", ensureAuthenticated, function (req, res, next){
     const subtaskID = req.params.subtaskID;
     const today = new Date();
@@ -349,7 +350,7 @@ router.post("/tasks/subtasks/edit/:subtaskID", ensureAuthenticated, function (re
         const extendedDue = Date.parse(extendedTo);
         const subtaskDue = Date.parse(subtask.dueAt);
 
-        if( extendedDue > subtaskDue && extendedDue >= today.getTime() ){
+        if( extendedDue >= today.getTime() ){
             subtask.title = title;
             subtask.description = description;
             subtask.extendedTo = extendedTo
@@ -358,7 +359,7 @@ router.post("/tasks/subtasks/edit/:subtaskID", ensureAuthenticated, function (re
                 if(error){ return next(error); }
 
                 req.flash("info", "Subtask updated succesfully");
-                res.redirect("/home");
+                res.redirect("/tasks/view/"+subtask.task);
             })
         } else {
             req.flash("error", "Extended date should be later or equal to today");

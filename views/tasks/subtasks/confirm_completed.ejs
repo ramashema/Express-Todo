@@ -1,4 +1,14 @@
-<h1>Confirm that you have completed this subtask</h1>
-<small>This action can be irreversible</small>
-<p>Are you sure you want to mark this subtask as completed?</p>
-<span><a href="/tasks/subtasks/complete/<%= subtaskID %>">Yes</a></span>&nbsp;&nbsp;<span><a href="/tasks/view/<%= subtaskID %>">No</a></span>
+<%- include("../../_header") %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-8 offset-2">
+            <h3>Confirm that you have completed this subtask</h3>
+            <p class="text-danger"><b>NOTE: </b>This action can be irreversible</p>
+            <p><b>Are you sure you want to mark this subtask as completed?</b></p>
+            <span><a href="/tasks/subtasks/complete/<%= subtaskID %>" class="btn btn-primary">Yes</a></span><span class="mx-3"><a href="/tasks/view/<%= subtaskID %>" class="btn btn-danger">No</a></span>
+        </div>
+    </div>
+</div>
+
+<%- include("../../_footer") %>

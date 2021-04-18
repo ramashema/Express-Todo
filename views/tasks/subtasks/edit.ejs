@@ -1,39 +1,54 @@
-<h1>Edit subtasks</h1>
-<p><a href="/home">Home</a></p>
-<div>
-    <!-- This div holds error and info messages -->
-    <% if(errors.length) { %>
-        <p><%= errors %></p>
-    <% } %>
+<%- include("../../_header") %>
 
-    <% if(infos.length) { %>
-        <p><%= infos %></p>
-    <% } %>
+<div class="container">
+    <div class="row">
+        <div class="col-6 offset-3 bg-light p-5">
+            
+            <h1>Edit subtasks</h1>
+
+            <div class="text-center">
+                <!-- This div holds error and info messages -->
+                <% if(errors.length) { %>
+                    <p class="alert alert-danger"><%= errors %></p>
+                <% } %>
+
+                <% if(infos.length) { %>
+                    <p class="alert alert-info"><%= infos %></p>
+                <% } %>
+            </div>
+            <h5 class="border rounded p-3 bg-light"><%= task.title %></h5>
+
+            <form action="/tasks/subtasks/edit/<%= subtask.id %>" method="post">
+                <!--<input type="hidden" name="task" value="<%= task.id %>">-->
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" class="form-control" name="title" value="<%= subtask.title %>">
+                </div>
+            
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" class="form-control" name="description"><%= subtask.description %></textarea>
+                </div>
+            
+                <div class="form-group">
+                    <label for="duedate">Due date</label>
+                    <input type="text" name="duedate" class="form-control" id="duedate" value="<%= subtask.dueAt %>" readonly>
+                </div>
+            
+                <div class="form-group">
+                    <label for="extendeddue">Due date</label>
+                    <input type="datetime-local" name="extendeddue" id="extendeddue" class="form-control" value="<%= subtask.extendedTo %>">
+                </div>
+            
+                <div class="form-group my-3">
+                    <input type="submit" value="Edit subtask" class="btn btn-success" role="button">
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-<b>Task:</b> <%= task.title %><br>
-<form action="/tasks/subtasks/edit/<%= subtask.id %>" method="post">
-    <!--<input type="hidden" name="task" value="<%= task.id %>">-->
-    <div>
-        <label for="title">Title</label>
-        <input type="text" id="title" name="title" value="<%= subtask.title %>">
-    </div>
 
-    <div>
-        <label for="description">Description</label>
-        <textarea id="description" name="description"><%= subtask.description %></textarea>
-    </div>
+<%- include("../../_footer") %>
 
-    <div>
-        <label for="duedate">Due date</label>
-        <input type="text" name="duedate" id="duedate" value="<%= subtask.dueAt %>" readonly>
-    </div>
 
-    <div>
-        <label for="extendeddue">Due date</label>
-        <input type="date" name="extendeddue" id="extendeddue" value="<%= subtask.extendedTo %>">
-    </div>
 
-    <div>
-        <input type="submit" value="Edit subtask" role="button">
-    </div>
-</form>

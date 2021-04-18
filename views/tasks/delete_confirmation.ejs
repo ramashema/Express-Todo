@@ -1,3 +1,16 @@
-<h1>Confirm Delete</h1>
-<p>Are you sure you want to delete this task?</p>
-<span><a href="/tasks/delete/<%= taskID %>">Yes</a></span>&nbsp;&nbsp;<span><a href="/tasks/view/<%= taskID %>">No</a></span>
+<%- include("../_header") %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-8 offset-2">
+
+        <h3>Confirm Delete</h3>
+        <p class="text-danger"><b>NOTE: </b>This action can be irreversible</p>
+        <p>Are you sure you want to delete this Project?</p>
+        <span><a href="/tasks/delete/<%= taskID %>" class="btn btn-danger">Yes</a></span>&nbsp;&nbsp;<span><a href="/tasks/view/<%= taskID %>" class="btn btn-primary">No</a></span>
+
+        </div>
+    </div>
+</div>
+
+<%- include("../_footer") %>
